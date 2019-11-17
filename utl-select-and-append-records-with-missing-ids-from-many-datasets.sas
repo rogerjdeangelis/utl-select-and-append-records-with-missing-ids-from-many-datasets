@@ -1,10 +1,33 @@
 Select and append records with missing ids from many datasets                                                                    
                                                                                                                                  
-  Two additional solutions that package the code inside one datastep                                                             
+  Three additional solutions that package the code inside one datastep                                                             
                                                                                                                                  
       a. Get meta data at datastep compilation time, ie if _n_=0.                                                                
-      b. get meta data inside set statement ast compile time                                                                     
-                                                                                                                                 
+      b. get meta data inside set statement ast compile time  
+      
+c. Recent optimal solution by Bartosz Jablonski          
+                                                      
+Bartosz Jablonski                                     
+yabwon@gmail.com                                      
+                                                                                                            
+* very nice application of 'call execute';           
+                                                      
+data _null_ ;                                         
+                                                      
+  call execute('data want; set ') ;                   
+                                                      
+  do until(eof);                                      
+    set dsn end=EOF;                                  
+    call execute(dsn) ;                               
+  end;                                                
+                                                      
+  call execute('indsname = dsn ;                      
+  where cmiss (id) ;                                  
+  DSNAME = dsn ;                                      
+  run; ') ;                                           
+stop;                                                 
+run ;                                                 
+                                                                                                                                                                                       
 SAS Forum                                                                                                                        
 https://tinyurl.com/tjjpzua                                                                                                      
 https://github.com/rogerjdeangelis/utl-select-and-append-records-with-missing-ids-from-many-datasets                             
